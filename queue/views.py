@@ -10,4 +10,4 @@ class Queue(View):
         res = twilio.twiml.Response()
         res.message("Hello, Mobile Monkey")
         print str(res)
-        HttpResponse("it worked.")
+        return HttpResponse("it worked")
