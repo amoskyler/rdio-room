@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import twilio.twiml
 from django.views.generic import View
+from django.http import HttpResponse
 # Create your views here.
 
 class Queue(View):
@@ -9,3 +10,4 @@ class Queue(View):
         res = twilio.twiml.Response()
         res.message("Hello, Mobile Monkey")
         print str(res)
+        HttpResponse("it worked.")
