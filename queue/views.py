@@ -5,7 +5,7 @@ from django.views.generic import View
 
 class Queue(View):
 
-    def post(self, request):
+    def get(self, request):
         res = twilio.twiml.Response()
         res.message("Hello, Mobile Monkey")
         print str(res)
