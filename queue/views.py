@@ -6,7 +6,6 @@ from django.http import HttpResponse
 
 class Queue(View):
 
-    @csrf_exempt
     def get(self, request):
         res = twilio.twiml.Response()
         res.message("Hello, Mobile Monkey")
