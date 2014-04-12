@@ -8,6 +8,6 @@ urlpatterns = patterns('',
     # url(r'^$', 'rdioroom.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^$', 'djtwilio.views.sms'),
+    url(r'^$', 'queue.views.sms'),
     url(r'^admin/', include(admin.site.urls)),
 )
