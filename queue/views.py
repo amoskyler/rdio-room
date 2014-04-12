@@ -3,13 +3,25 @@ from twilio.twiml import Response
 import twilio.twiml
 from django.views.generic import View
 from django.http import HttpResponse
+
+from rdio import Rdio
 # Create your views here.
 
 class Queue(View):
 
     def get(self, request):
         res = twilio.twiml.Response()
-        from_number = request.GET['Body']
-        print from_number
-        twiml = '<Response><Message>Hello from your Django app!</Message></Response>'
-        return HttpResponse(twiml+ '/n' + from_number, content_type='text/xml')
+        body = request.GET['Body']
+        results = searchRdio(body)
+
+        twiml = '<Response><Message>message of ' +body+ ' was recieved</Message></Response>'
+        res.message("You're song "+results + "has been found")
+        return HttpResponse(twiml+ '/n' + results, content_type='text/xml')
+
+        def searchRdio(query):
+            rdio = Rdio(("WF00svqcVrTXHv3eHSQO1w"), ("FYAjVfujchx4eTCFAOD8ag"))
+            results = rdio.call("search", {"query" :  query,
+                                                        "types" : ["Track",],
+                                                        "extras" : "isExplicit",
+                                                        "count" : 1})
+            return results[0]
