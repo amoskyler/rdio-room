@@ -13,7 +13,7 @@ class Queue(View):
         res = twilio.twiml.Response()
         body = request.GET['Body']
         results = searchRdio(body)
-
+        print results
         twiml = '<Response><Message>message of ' +body+ ' was recieved</Message></Response>'
         res.message("You're song "+results + "has been found")
         return HttpResponse(twiml+ '/n' + results, content_type='text/xml')
