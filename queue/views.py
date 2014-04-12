@@ -19,7 +19,7 @@ class Queue(View):
         return HttpResponse(twiml+ '/n' + results, content_type='text/xml')
 
         def searchRdio(query):
-            rdio = Rdio(("WF00svqcVrTXHv3eHSQO1w"), ("FYAjVfujchx4eTCFAOD8ag"))
+            rdio = Rdio(("WF00svqcVrTXHv3eHSQO1w", "FYAjVfujchx4eTCFAOD8ag"))
             results = rdio.call("search", {"query" :  query,
                                                         "types" : ["Track",],
                                                         "extras" : "isExplicit",
