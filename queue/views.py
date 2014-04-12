@@ -1,18 +1,16 @@
 from django.shortcuts import render
-import twilio.twiml
+from twilio.twiml import Response
 from django.views.generic import View
 from django.http import HttpResponse
+from django_twilio.decorators import twilio_view
+from twilio.twiml import Response
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 class Queue(View):
 
-    @csrf_exempt
+    @twilio_view
     def get(self, request):
-        res = twilio.twiml.Response()
-        res.message("Hello, Mobile Monkey")
 
-        twiml = '<Response><Message>Hello from your Django app!</Message></Response>'
-
-
-        print str(res)
-        return HttpResponse(twiml, content_type='text/xml')
+        r = Response()
+        r.message('Hello from your Django app!')
+        return r
