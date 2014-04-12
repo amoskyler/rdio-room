@@ -9,7 +9,7 @@ class Queue(View):
 
     def get(self, request):
         res = twilio.twiml.Response()
-        textBody = request.values.get('Body', none)
-        print textBody
+        from_number = request.GET['Body']
+        print from_number
         twiml = '<Response><Message>Hello from your Django app!</Message></Response>'
-        return HttpResponse(twiml+ '/n' + textBody, content_type='text/xml')
+        return HttpResponse(twiml+ '/n' + from_number, content_type='text/xml')
