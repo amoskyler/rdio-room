@@ -17,3 +17,4 @@ ngrok
 npm-debug.log
 node_modules
 *.sublime*
+server/config
