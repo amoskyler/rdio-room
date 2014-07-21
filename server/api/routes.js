@@ -9,7 +9,7 @@ module.exports = function(router){
 
 //get all route
   router.route('/owner')
-
+//Get all Owners
     .get(function(req, res) {
     	  Owner.find(function(err, owner) {
     		  if (err)
@@ -17,7 +17,7 @@ module.exports = function(router){
     	     res.json(owner);
          });
     })
-
+//Create an owner
     .post(function(req, res){
       var owner = new Owner();
       owner.name = req.body.name;
@@ -29,8 +29,9 @@ module.exports = function(router){
       });
     });
 
-  //get one route
+  //Route with ID
   router.route('/owner/:owner_id')
+  //get a single owner
     .get(function(req, res){
       Owner.findById(req.params.owner_id, function(err, owner){
           if (err)
@@ -38,7 +39,7 @@ module.exports = function(router){
 			     res.json(owner);
       });
     })
-
+  //update a user with new info
     .put(function(req, res){
       // use our owner model to find the owner's we want
       Owner.findById(req.params.owner_id, function(err, owner) {
@@ -57,8 +58,19 @@ module.exports = function(router){
           });
 
         });
+    })
+
+    //delete an owner
+    .delete(function(req, res){
+      Owner.remove({
+        _id: req.params.owner_id
+      }, function(err, owner){
+        if(err)
+          res.send(err);
+        else
+          res.json({message: owner.name+" successfully deleted"})
+      })
     });
 
-  	// update the owner with this id (accessed at PUT owner/:owner_id)
 
 };
