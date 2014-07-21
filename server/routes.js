@@ -11,12 +11,23 @@ module.exports = function (app, passport){
 
     src = "window._loggedIn = false";
     if(req.user){
-      src = "window._loggedIn = true"
-      src += "window._id = "+req.user._id+";"
-      src += "window._name = "+req.user.name+";"
+      src = "window._loggedIn = true;"
+      src += "window._id = '"+req.user._id+"';"
+      src += "window._name = '"+req.user.name+"';"
     }
 
     res.set("Content-Type", 'application/javascript');
     res.send(200, src);
   });
+
+  app.get('/auth/rdio/callback', passport.authenticate('rdio'), function(req, res){
+    res.redirect('/')
+  });
+
+  app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
+
+
 };

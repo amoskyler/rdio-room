@@ -2,11 +2,11 @@ $(document).ready(function(){
 
   var IndexView = Backbone.View.extend({
     render:function(){
-      if(_loggedIn === false){
+      if(window._loggedIn === false){
           this.$el.html("You are not logged in");
           return this;
       }
-      else if(_loggedIn === true){
+      else if(window._loggedIn === true){
         this.$el.html("You are logged in");
         return this;
       };
