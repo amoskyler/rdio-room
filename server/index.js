@@ -31,7 +31,8 @@ app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname,'../public')));
 
 //configure router
-router.use(isAuthenticated, function(req, res, next) {
+//isAuthenticated removed during development
+router.use(function(req, res, next) {
   // do logging
   if(req.method === 'GET'){
     console.log("A user has made a GET request.");

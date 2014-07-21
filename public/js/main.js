@@ -1,4 +1,5 @@
 $(document).ready(function(){
+//song request models
 
   var OwnerModel = Backbone.Model.extend({
     urlRoot: '/api/owner'
@@ -7,6 +8,15 @@ $(document).ready(function(){
   var OwnerCollection = Backbone.Collection.extend({
     model: OwnerModel,
     url: '/api/owner'
+  });
+//song request models
+  var RequestModel = Backbone.Model.extend({
+    urlRoot: '/api/requests'
+  });
+
+  var RequestCollection = Backbone.Collection.extend({
+    model: RequestModel,
+    url: '/api/request'
   });
 
   var IndexView = Backbone.View.extend({
@@ -17,11 +27,10 @@ $(document).ready(function(){
       }
       else if(window._loggedIn === true){
         console.log(window._id);
-        owner = new OwnerModel({id: window._id});
+        var owner = new OwnerModel({id: window._id});
         owner.fetch({
          success: function(){
-           //console.log(owner)
-           console.log(JSON.stringify(owner));
+           console.log("Owner Profile: "+ JSON.stringify(owner));
          },
          error: function(){
            console.log("error")
@@ -33,6 +42,8 @@ $(document).ready(function(){
       };
     }
   });
+
+
   var AppRouter = Backbone.Router.extend({
 
     routes:{
@@ -41,8 +52,10 @@ $(document).ready(function(){
 
     index: function(){
       console.log("you're at the index");
-      var view = new IndexView();
-      $('.content').html(view.render().el);
+      var index = new IndexView();
+      var request = new RequestView();
+      $('.content').html(index.render().el);
+      $('.requests').html(request.render().el);
     }
 
   });
