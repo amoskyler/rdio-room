@@ -1,5 +1,6 @@
 var path = require('path');
 
+
 module.exports = function (app, passport){
 
   app.get('/', function(req, res){
@@ -11,9 +12,11 @@ module.exports = function (app, passport){
 
     src = "window._loggedIn = false";
     if(req.user){
-      src = "window._loggedIn = true;"
-      src += "window._id = '"+req.user._id+"';"
-      src += "window._name = '"+req.user.name+"';"
+      console.log(req.user);
+      src = "window._loggedIn = true;";
+      src += "window._id = '"+req.user._id+"';";
+      src += "window._name = '"+req.user.name+"';";
+      src += "window._rdioURL = '"+req.user.rdioURL+"';";
     }
 
     res.set("Content-Type", 'application/javascript');
@@ -29,5 +32,7 @@ module.exports = function (app, passport){
     res.redirect('/');
   });
 
+  app.get('/api', function(req, res){
 
+  });
 };

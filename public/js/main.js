@@ -3,11 +3,11 @@ $(document).ready(function(){
   var IndexView = Backbone.View.extend({
     render:function(){
       if(window._loggedIn === false){
-          this.$el.html("You are not logged in");
+          this.$el.html("You are not logged in.");
           return this;
       }
       else if(window._loggedIn === true){
-        this.$el.html("You are logged in");
+        this.$el.html("You are logged in. Welcome "+window._name);
         return this;
       };
     }
@@ -28,4 +28,8 @@ $(document).ready(function(){
 
   var appRouter = new AppRouter();
   Backbone.history.start({pushState:true});
+
+  var userModel = Backbone.Model.extend({
+
+  });
 });
