@@ -31,7 +31,7 @@ app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname,'../public')));
 
 //configure router
-router.use(function(req, res, next) {
+router.use(isAuthenticated, function(req, res, next) {
   // do logging
   if(req.method === 'GET'){
     console.log("A user has made a GET request.");
@@ -59,3 +59,14 @@ console.log("server listening on port: "+port)
 
 
 server.listen(port);
+
+function isAuthenticated(req, res, next){
+  if (req.isAuthenticated()){
+    console.log("Authorized API Request from "+req.user.name);
+    return next();
+  }
+  else{
+    console.log("you're not logged in")
+    res.json({ message: 'You are not authorized to access this API' });
+  }
+}

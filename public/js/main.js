@@ -1,5 +1,14 @@
 $(document).ready(function(){
 
+  var OwnerModel = Backbone.Model.extend({
+    urlRoot: '/api/owner'
+  });
+
+  var OwnerCollection = Backbone.Collection.extend({
+    model: OwnerModel,
+    url: '/api/owner'
+  });
+
   var IndexView = Backbone.View.extend({
     render:function(){
       if(window._loggedIn === false){
@@ -7,6 +16,18 @@ $(document).ready(function(){
           return this;
       }
       else if(window._loggedIn === true){
+        console.log(window._id);
+        owner = new OwnerModel({id: window._id});
+        owner.fetch({
+         success: function(){
+           //console.log(owner)
+           console.log(JSON.stringify(owner));
+         },
+         error: function(){
+           console.log("error")
+         }
+        });
+
         this.$el.html("You are logged in. Welcome "+window._name);
         return this;
       };
@@ -28,8 +49,4 @@ $(document).ready(function(){
 
   var appRouter = new AppRouter();
   Backbone.history.start({pushState:true});
-
-  var userModel = Backbone.Model.extend({
-
-  });
 });

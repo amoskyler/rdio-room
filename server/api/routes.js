@@ -16,6 +16,17 @@ module.exports = function(router){
     			   res.send(err);
     	     res.json(owner);
          });
+    })
+
+    .post(function(req, res){
+      var owner = new Owner();
+      owner.name = req.body.name;
+
+      owner.save(function(err){
+        if(err)
+          res.send(err);
+        res.json({message: 'owner created!'});
+      });
     });
 
   //get one route
