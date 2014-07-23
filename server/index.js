@@ -1,7 +1,7 @@
-var express = require('express');
 var http = require('http');
+var express = require('express');
 var app = express();
-var server = http.createServer(app);
+var server = http.Server(app);
 var bodyParser = require('body-parser')
 var port = process.env.PORT || 5000;
 var mongoose = require('mongoose');
@@ -52,12 +52,19 @@ router.use(function(req, res, next) {
 //register routers with app
 app.use('/api', router);
 
-var io = require('socket.io').listen(server);
+var io = require('socket.io')(server);
 
-require('./routes')(app, passport);
+
+require('./routes')(app, passport, io);
 require('./api/routes')(router);
 console.log("server listening on port: "+port)
 
+io.on('connection', function (socket) {
+  socket.emit('roomConnect', { Message: 'Welcome to Rdio Room' });
+  socket.on('clientConnect', function (data) {
+    console.log(data);
+  });
+});
 
 server.listen(port);
 

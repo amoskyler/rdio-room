@@ -1,6 +1,17 @@
 Request = require('../models/requests')
 
 module.exports = function(router, requestAPI){
+
+  router.route('/request/:request_id')
+  //get a single owner
+    .get(function(req, res){
+      Request.findById(req.params.request_id, function(err, request){
+          if (err)
+              res.send(err);
+           res.json(request);
+      });
+    })
+
   router.route('/request')
 
   //get all requests

@@ -19,6 +19,10 @@ gulp.task('jade', function(){
   .pipe(jade())
   .pipe(gulp.dest('public'))
   .pipe(livereload());
+  gulp.src('client/helper.jade')
+  .pipe(jade())
+  .pipe(gulp.dest('public'))
+  .pipe(livereload());
 });
 
 gulp.task('scripts', function(){
@@ -32,7 +36,8 @@ gulp.task('scripts', function(){
 gulp.task('watch', function(){
   gulp.watch('client/css/*.styl', ['stylus']);
   gulp.watch('client/**/*.js', ['scripts']);
-  gulp.watch('client/index.jade', ['jade'])
+  gulp.watch('client/index.jade', ['jade']);
+  gulp.watch('client/helper.jade', ['jade'])
 });
 
 gulp.task('default', ['stylus', 'jade', 'scripts', 'watch']);
