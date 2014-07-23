@@ -1,8 +1,8 @@
 define(function(require){
 
-  var index = require('views/index');
-  var login = require('views/login');
-  var room = require('views/room');
+  var Index = require('views/index');
+  var Login = require('views/login');
+  var Room = require('views/room');
 
   var AppRouter = Backbone.Router.extend({
     routes: {
@@ -12,7 +12,9 @@ define(function(require){
     },
 
     index: function(){
-      console.log(this);
+      var view = new Index({
+        el: ".main"
+      });
     },
 
     login: function(){
