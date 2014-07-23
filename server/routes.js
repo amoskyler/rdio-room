@@ -3,11 +3,6 @@ var path = require('path');
 
 module.exports = function (app, passport){
 
-
-  app.get('/', function(req, res){
-    res.sendfile(path.join(__dirname, '../public/index.html'));
-  });
-
   app.get('/js/isLoggedIn.js', function(req, res){
 
 
@@ -37,4 +32,9 @@ module.exports = function (app, passport){
   app.get('/api', function(req, res){
 
   });
+
+  app.get('*', function(req, res){
+    res.sendfile(path.join(__dirname, '../public/index.html'));
+  });
+  
 };

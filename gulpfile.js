@@ -5,6 +5,7 @@ var ecstatic = require('ecstatic');
 var stylus = require('gulp-stylus');
 var lint = require('gulp-jshint');
 var jade = require('gulp-jade');
+var wrap = require('gulp-wrap-amd');
 var livereload = require('gulp-livereload');
 
 gulp.task('stylus', function(){
@@ -14,14 +15,22 @@ gulp.task('stylus', function(){
   .pipe(livereload());
 });
 
-gulp.task('jade', function(){
-  gulp.src('client/index.jade')
-  .pipe(jade())
-  .pipe(gulp.dest('public'))
+gulp.task('templates', function(){
+  gulp.src('./client/templates/**/*.jade')
+  .pipe(jade({client:true}))
+  .pipe(wrap({
+    deps: ['vendor/jade'],
+    params: ['jade']
+  }))
+  .pipe(gulp.dest('./public/templates'))
   .pipe(livereload());
-  gulp.src('client/helper.jade')
+
+});
+
+gulp.task('jade', function(){
+  gulp.src('./client/index.jade')
   .pipe(jade())
-  .pipe(gulp.dest('public'))
+  .pipe(gulp.dest('./public'))
   .pipe(livereload());
 });
 
@@ -37,7 +46,7 @@ gulp.task('watch', function(){
   gulp.watch('client/css/*.styl', ['stylus']);
   gulp.watch('client/**/*.js', ['scripts']);
   gulp.watch('client/index.jade', ['jade']);
-  gulp.watch('client/helper.jade', ['jade'])
+  gulp.watch('client/templates/**/*.jade', ['templates'])
 });
 
-gulp.task('default', ['stylus', 'jade', 'scripts', 'watch']);
+gulp.task('default', ['stylus', 'templates', 'jade', 'scripts', 'watch']);
