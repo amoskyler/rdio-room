@@ -13,7 +13,7 @@ module.exports = function (app, passport){
       src += "window._id = '"+req.user._id+"';";
       src += "window._name = '"+req.user.name+"';";
       src += "window._rdioURL = '"+req.user.rdioURL+"';";
-      src += "window._roomID = 'ABC';";
+      src += "window._roomID = '"+req.user.roomID+"';";
     }
 
     res.set("Content-Type", 'application/javascript');
@@ -36,5 +36,5 @@ module.exports = function (app, passport){
   app.get('*', function(req, res){
     res.sendfile(path.join(__dirname, '../public/index.html'));
   });
-  
+
 };

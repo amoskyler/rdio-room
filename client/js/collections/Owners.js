@@ -1,8 +1,7 @@
 define(function(require){
   Owner = require("models/Owner")
-
   return Backbone.Collection.extend({
-    model: OwnerModel,
+    model: Owner,
     url: '/api/owner'
   });
 });

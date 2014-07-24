@@ -49,21 +49,27 @@ router.use(function(req, res, next) {
   next(); // make sure we go to the next routes and don't stop here
 });
 
+var io = require('socket.io')(server);
 //register routers with app
 app.use('/api', router);
 
-var io = require('socket.io')(server);
 
-
-require('./routes')(app, passport, io);
-require('./api/routes')(router);
+require('./routes')(app, passport);
+require('./api/routes')(router, io);
 console.log("server listening on port: "+port)
 
-io.on('connection', function (socket) {
+io.on('connection', function(socket){
   socket.emit('roomConnect', { Message: 'Welcome to Rdio Room' });
   socket.on('clientConnect', function (data) {
-    console.log(data);
   });
+
+  socket.on('subscribe', function(data){
+    console.log("welcome to a room");
+    socket.join(data.room);
+  });
+
+  socket.on('unsubscribe', function(data) {socket.leave(data.room);})
+
 });
 
 server.listen(port);

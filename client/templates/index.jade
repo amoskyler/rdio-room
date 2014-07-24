@@ -1,0 +1,12 @@
+owner
+  .welcome
+    h3 Welcome to Rdio Room!
+    a(href='http://rdio.com#{owner.get("rdioURL")}') #{owner.get("name")}
+    br
+    |Owner id: #{owner.get("ownerId")}
+    br
+    a(href='/logout') Logout
+    br
+    br
+    |Go to you're room! 
+    a(href='/room/#{owner.get("roomID")}') #{owner.get("roomID")}

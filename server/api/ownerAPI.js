@@ -6,7 +6,8 @@ module.exports = function(router, ownerAPI){
         Owner.find(function(err, owner) {
           if (err)
              res.send(err);
-           res.json(owner);
+          else
+            res.json(owner);
          });
     })
 //Create an owner
@@ -17,7 +18,8 @@ module.exports = function(router, ownerAPI){
       owner.save(function(err){
         if(err)
           res.send(err);
-        res.json({message: 'owner created!'});
+        else
+          res.json({message: 'owner created!'});
       });
     });
 
@@ -28,7 +30,8 @@ module.exports = function(router, ownerAPI){
       Owner.findById(req.params.owner_id, function(err, owner){
           if (err)
               res.send(err);
-           res.json(owner);
+          else
+            res.json(owner);
       });
     })
   //update a user with new info
@@ -38,17 +41,17 @@ module.exports = function(router, ownerAPI){
 
           if (err)
             res.send(err);
-
+          else{
           owner.rdioURL = req.body.email; 	// update the owner's info
 
           // save the bear
           owner.save(function(err) {
             if (err)
               res.send(err);
-
-            res.json({ message: "owner's email updated!" });
+            else
+              res.json({ message: "owner's email updated!" });
           });
-
+        }
         });
     })
 

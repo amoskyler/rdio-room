@@ -1,6 +1,6 @@
 define(function(require){
-  var templ = require('templates/login');
-  
+  var templ = require('templates/noAuth');
+
   return Backbone.View.extend({
 
     template: templ,

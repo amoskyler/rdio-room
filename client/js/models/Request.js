@@ -1,5 +1,5 @@
 define(function(require){
   return Backbone.Model.extend({
-    urlRoot: '/api/owner'
+    urlRoot: '/api/request'
   });
 });

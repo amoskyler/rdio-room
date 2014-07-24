@@ -25,6 +25,13 @@ var requestSchema = mongoose.Schema({
         },
         songId: {
           type: String
+        },
+        roomId: {
+          type: String,
+          required: true
+        },
+        phoneNumber:{
+          type: String
         }
 });
 

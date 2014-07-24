@@ -3,16 +3,16 @@ head
   script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
   script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js')
   script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js')
-  script(src='/js/vendor/require.js')
-  //script(src='https://cdn.socket.io/socket.io-1.0.6.js')
+  script(src='https://cdn.socket.io/socket.io-1.0.6.js')
   //script(src='https://www.rdio.com/api/api.js?client_id=cZ3gX_7XLAis91k2wKnHhw')
+  script(src='/js/vendor/require.js')
   script(src='/js/isLoggedIn.js')
   script.
     require({
       baseUrl: ".",
       packages: [
         { name: "templates", location: "/templates"},
-        { name: "app", location: "/js" },
+        { name: "app", location: "/js/" },
         { name: "views", location: "/js/views" },
         { name: "models", location: "/js/models"},
         { name: "collections", location: "/js/collections"},
@@ -20,4 +20,7 @@ head
       ]
     },[
      'app/main'
-    ]);
+    ])
+
+body
+  .main
