@@ -13,6 +13,9 @@ define(function() {
     roomID: function(){
       return window._roomID;
     },
+    removeRequest: function(){
+      this.model.save({played: 'true'})
+    },
     login: function(){
       Backbone.history.navigate('/login', {trigger: true});
     },

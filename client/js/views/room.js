@@ -6,6 +6,14 @@ define(function(require){
   return Backbone.View.extend({
     template: templ,
 
+    events : {
+      'click .removeRequest' : 'remove'
+    },
+
+    remove: function(){
+      this.$el.remove();
+    },
+
     initialize: function(options){
       var self = this;
       this.model = new Request({id: options.room})
@@ -26,6 +34,7 @@ define(function(require){
       }));
       return this;
     },
+
   });
 
 });
