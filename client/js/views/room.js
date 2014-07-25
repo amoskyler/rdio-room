@@ -11,8 +11,7 @@ define(function(require){
       this.model = new Request({id: options.room})
       this.model.fetch({
         success: function(data){
-          console.log(data);
-          self.render
+          self.render();
         },
         error: function(){console.log('error')}
       })
@@ -21,13 +20,12 @@ define(function(require){
 
     render: function(){
       if(!this.model) return this;
-      console.log(this.model.attributes)
+      console.log(this.model)
       this.$el.html(templ({
-        owner: this.model
+        requests: this.model.attributes
       }));
       return this;
-    }
-
+    },
   });
 
 });

@@ -37,8 +37,7 @@ define(function(require){
     },
 
     room: function(id){
-      if(auth.roomID() != id) return auth.noRoomAuth()
-
+      //if(auth.roomID() != id) return auth.noRoomAuth()
       socketConnect(id, auth)
       var view = new Room({
         el: ".main",

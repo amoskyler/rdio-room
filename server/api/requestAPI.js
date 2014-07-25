@@ -4,7 +4,7 @@ module.exports = function(router, io){
   router.route('/request/:request_id')
   //get a single request
     .get(function(req, res){
-      Request.find({'roomId': req.params.request_id}, 'songName', function(err, request){
+      Request.find({'roomId': req.params.request_id}, function(err, request){
         if(err) return err
         else res.json(request);
       });
@@ -38,7 +38,7 @@ module.exports = function(router, io){
           res.send(err);
         }
         else{
-        res.json({message: 'song request created!'});
+        res.send({message: 'song request created!'});
         console.log(req.body.From)
 
         //Emit to request info to front end
