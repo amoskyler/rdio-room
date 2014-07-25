@@ -1,4 +1,8 @@
-Request = require('../models/requests')
+Request = require('../models/requests');
+checkUser = require('../functions/currentUser');
+saveUser = require('../functions/saveUser');
+addUserRoom = require('../functions/addUserRoom')
+addRequestRoom = require('../functions/addRequestRoom')
 
 module.exports = function(router, io){
   router.route('/request/:request_id')
@@ -24,32 +28,36 @@ module.exports = function(router, io){
 
 //Create a request
     .post(function(req, res){
-      console.log(req.body)
-      var request = new Request();
-      request.songName = req.body.Body;
-      request.requestBody = req.body.Body;
-      request.songId = req.body.From;
-      request.roomId = req.body.Body;
-      request.phoneNumber = req.body.From;
-
-      request.save(function(err){
-        if(err){
-          console.log(err)
-          res.send(err);
+    console.log("New request from: "+req.body.From);
+      checkUser(req.body, function(err, user){
+        if(!user){
+          saveUser(req.body, function(err, success){
+            if(err) console.log(err);
+            else if(success) {
+              console.log("Success")
+              addUserRoom(user, req.body, function(err, roomId){
+                if(err) res.send(err);
+                else if(!roomId) res.json({message: "room does not exist"})
+                else res.json({message: "room exists: "+roomId})
+              })
+            };
+          });
         }
-        else{
-        res.send({message: 'song request created!'});
-        console.log(req.body.From)
-
-        //Emit to request info to front end
-        io.to(req.body.Body).emit('notify', {
-          songName: req.body.Body,
-          body: req.body.Body,
-          songId: req.body.From,
-          roomId: req.body.Body,
-          phoneNumber: req.body.phoneNumber
-          })
-        }
+      else{
+        addRequestRoom(req.body, user.roomID, function(err, success){
+            if(success){
+              io.to(user.roomID).emit('notify', {
+                songName: req.body.Body,
+                body: req.body.Body,
+                songId: req.body.Body,
+                roomId: user.roomID,
+              });
+              res.json({message: 'song request created!'});
+            }
+          else res.json({message: 'There was a problem with the request'})
+        });
+      }
       });
+
     });
 };
