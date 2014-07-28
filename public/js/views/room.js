@@ -2,7 +2,6 @@ define(function(require){
   var Request = require('models/Request');
   var Auth = require('app/auth');
   var templ = require('templates/room');
-
   return Backbone.View.extend({
     template: templ,
 
@@ -28,6 +27,7 @@ define(function(require){
 
     render: function(){
       if(!this.model) return this;
+        console.log(this.model.attributes);
       console.log(this.model)
       this.$el.html(templ({
         requests: this.model.attributes

@@ -1,11 +1,12 @@
 Request = require('../models/requests');
 checkUser = require('../functions/currentUser');
 saveUser = require('../functions/saveUser');
-addUserRoom = require('../functions/addUserRoom')
-addRequestRoom = require('../functions/addRequestRoom')
-removeUserRoom = require('../functions/removeUserRoom')
+addUserRoom = require('../functions/addUserRoom');
+addRequestRoom = require('../functions/addRequestRoom');
+removeUserRoom = require('../functions/removeUserRoom');
+sendReply = require('../functions/sendReply');
 
-module.exports = function(router, io){
+module.exports = function(router, io, client, rdio){
   router.route('/request/:request_id')
   //get a single request
     .get(function(req, res){
@@ -49,45 +50,49 @@ module.exports = function(router, io){
 
 //Create a request
     .post(function(req, res){
+    //  console.log(req.body.Body.toUpperCase().replace(/ /g,''))
 
     console.log("New request from: "+req.body.From);
+    req.body.Body = req.body.Body.toUpperCase();
 
-    if(req.body.Body != "unsubscribe"){
+    if(req.body.Body.replace(/ /g, '') != "LEAVEROOM"){
       checkUser(req.body, function(err, user){
         if(!user){
           addUserRoom(req.body, function(err, roomId){
             if(err) console.log(err)
-            else if(!roomId) res.json({message: "room does not exist"})
+
+            else if(!roomId) sendReply(req.body.From, "you're not currently subscribed to a room. Please enter a valid room code to continue", client)//res.json({message: "You are not currently subscribed to a room. Please enter a valid room code to continue"})
             else{
               saveUser(req.body, function(err, success){
                 if(err) res.send(err);
-                else res.json({message: "You've been added to a room: "+ roomId})
+                else sendReply(req.body.From, "You've been added to a room: "+ roomId.roomID, client)//res.json({message: "You've been added to a room: "+ roomId})
               })
             }
           })
         }
 
       else{
-        addRequestRoom(req.body, user.roomID, function(err, success){
-            if(success){
+        addRequestRoom(req.body, user.roomID, rdio, function(err, results){
+          console.log(results);
+            if(results){
               io.to(user.roomID).emit('notify', {
-                songName: req.body.Body,
-                body: req.body.Body,
-                songId: req.body.Body,
+                songName: results.name,
+                songId: results,
                 roomId: user.roomID,
               });
-              res.json({message: 'song request created!'});
+              sendReply(req.body.From, 'Your request for '+results.name+' by '+results.artist+' has been added to the queue', client)
             }
-          else res.json({message: 'There was a problem with the request'})
+          else if(!err && !results) sendReply(req.body.From, 'Song not found', client)
+          else sendReply(req.body.From, 'There was a problem with the request', client)
         });
       }
       });
     }
   else{
     removeUserRoom(req.body, function(err, user){
-      if(err) res.json({message: "Error unsubscribing"});
-      if(!user) res.json({message: "you were not subscribed to a room"});
-      if(user) res.json({message: "You have been unsubscribed from a room: "+ user.roomID})
+      if(err)  sendReply(req.body.From, 'Err unsubscribing', client)//res.json({message: "Error unsubscribing"});
+      if(!user) sendReply(req.body.From, 'You were not subscribed to a room', client)//res.json({message: "you were not subscribed to a room"});
+      if(user) sendReply(req.body.From, 'You have been unsubscribed from room: '+user.roomID, client)//res.json({message: "You have been unsubscribed from a room: "+ user.roomID})
     });
   }
     });

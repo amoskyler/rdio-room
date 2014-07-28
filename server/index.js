@@ -6,6 +6,7 @@ var bodyParser = require('body-parser')
 var port = process.env.PORT || 5000;
 var mongoose = require('mongoose');
 var configDB = require('./config/database.js');
+var auth = require('./config/auth');
 var jade = require('jade');
 var passport = require('passport');
 var flash = require('connect-flash');
@@ -13,6 +14,16 @@ var logger = require('express-logger');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var path = require('path');
+var accountSid = auth.twilioAuth.accountSid;
+var authToken = auth.twilioAuth.authToken;
+var client = require('twilio')(accountSid, authToken);
+var Rdio = require('rdio-node').Rdio;
+//create new server side rdio instance (currently oauth1.0)
+var rdio = new Rdio({
+  consumerKey: auth.rdioAuth1.consumerKey,
+  consumerSecret: auth.rdioAuth1.consumerSecret
+});
+
 //create router
 var router = express.Router();
 
@@ -55,7 +66,7 @@ app.use('/api', router);
 
 
 require('./routes')(app, passport);
-require('./api/routes')(router, io);
+require('./api/routes')(router, io, client, rdio);
 console.log("server listening on port: "+port)
 
 io.on('connection', function(socket){
