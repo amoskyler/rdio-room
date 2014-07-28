@@ -12,6 +12,10 @@ var userSchema = mongoose.Schema({
         roomID: {
           type: String,
           required: true,
+        },
+        explicitPermission: {
+          type: Boolean,
+          default: true
         }
 });
 

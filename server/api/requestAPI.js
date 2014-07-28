@@ -58,23 +58,24 @@ module.exports = function(router, io, client, rdio){
     if(req.body.Body.replace(/ /g, '') != "LEAVEROOM"){
       checkUser(req.body, function(err, user){
         if(!user){
-          addUserRoom(req.body, function(err, roomId){
+          addUserRoom(req.body, function(err, roomInfo){
             if(err) console.log(err)
 
-            else if(!roomId) sendReply(req.body.From, "you're not currently subscribed to a room. Please enter a valid room code to continue", client)//res.json({message: "You are not currently subscribed to a room. Please enter a valid room code to continue"})
+            else if(!roomInfo.roomID) sendReply(req.body.From, "you're not currently subscribed to a room. Please enter a valid room code to continue", client)//res.json({message: "You are not currently subscribed to a room. Please enter a valid room code to continue"})
             else{
-              saveUser(req.body, function(err, success){
+              saveUser(req.body, roomInfo, function(err, success){
                 if(err) res.send(err);
-                else sendReply(req.body.From, "You've been added to a room: "+ roomId.roomID, client)//res.json({message: "You've been added to a room: "+ roomId})
+                else sendReply(req.body.From, "You've been added to a room: "+ roomInfo.roomID, client)//res.json({message: "You've been added to a room: "+ roomId})
               })
             }
           })
         }
 
       else{
-        addRequestRoom(req.body, user.roomID, rdio, function(err, results){
+        addRequestRoom(req.body, user, rdio, function(err, results){
           console.log(results);
-            if(results){
+          //check if song is flagged not to play
+            if(results.permission != false){
               io.to(user.roomID).emit('notify', {
                 songName: results.name,
                 songId: results,
@@ -83,7 +84,9 @@ module.exports = function(router, io, client, rdio){
               sendReply(req.body.From, 'Your request for '+results.name+' by '+results.artist+' has been added to the queue', client)
             }
           else if(!err && !results) sendReply(req.body.From, 'Song not found', client)
-          else sendReply(req.body.From, 'There was a problem with the request', client)
+          else if(results.permission === false) sendReply(req.body.From, 'No Explicit Songs in this Room', client)
+          else console.log(err);
+          //else sendReply(req.body.From, 'There was a problem with the request', client)
         });
       }
       });

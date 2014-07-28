@@ -30,6 +30,10 @@ var ownerSchema = mongoose.Schema({
           required: true,
           default: makeid()
 
+        },
+        explicit: {
+          type: Boolean,
+          default: true
         }
 });
 

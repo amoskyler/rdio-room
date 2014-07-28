@@ -32,6 +32,9 @@ var requestSchema = mongoose.Schema({
         },
         phoneNumber:{
           type: String
+        },
+        allData: {
+          type: Object
         }
 });
 
