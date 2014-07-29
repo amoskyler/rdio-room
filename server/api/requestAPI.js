@@ -61,11 +61,13 @@ module.exports = function(router, io, client, rdio){
           addUserRoom(req.body, function(err, roomInfo){
             if(err) console.log(err)
 
-            else if(!roomInfo.roomID) sendReply(req.body.From, "you're not currently subscribed to a room. Please enter a valid room code to continue", client)//res.json({message: "You are not currently subscribed to a room. Please enter a valid room code to continue"})
+            else if(!roomInfo) //sendReply(req.body.From, "you're not currently subscribed to a room. Please enter a valid room code to continue", client)
+              res.json({message: "You are not currently subscribed to a room. Please enter a valid room code to continue"})
             else{
               saveUser(req.body, roomInfo, function(err, success){
                 if(err) res.send(err);
-                else sendReply(req.body.From, "You've been added to a room: "+ roomInfo.roomID, client)//res.json({message: "You've been added to a room: "+ roomId})
+                else //sendReply(req.body.From, "You've been added to a room: "+ roomInfo.roomID, client)
+                  res.json({message: "You've been added to a room: "+ roomInfo.roomID})
               })
             }
           })
@@ -75,27 +77,33 @@ module.exports = function(router, io, client, rdio){
         addRequestRoom(req.body, user, rdio, function(err, results){
           console.log(results);
           //check if song is flagged not to play
-            if(results.permission != false){
+            if(results.permissions != false){
               io.to(user.roomID).emit('notify', {
                 songName: results.name,
-                songId: results,
+                songId: results.key,
                 roomId: user.roomID,
               });
-              sendReply(req.body.From, 'Your request for '+results.name+' by '+results.artist+' has been added to the queue', client)
+              //sendReply(req.body.From, 'Your request for '+results.name+' by '+results.artist+' has been added to the queue', client)
+              res.json({message: 'Your request for '+results.name+' by '+results.artist+' has been added to the queue'})
             }
-          else if(!err && !results) sendReply(req.body.From, 'Song not found', client)
-          else if(results.permission === false) sendReply(req.body.From, 'No Explicit Songs in this Room', client)
-          else console.log(err);
-          //else sendReply(req.body.From, 'There was a problem with the request', client)
+          else if(!err && !results) //sendReply(req.body.From, 'Song not found', client)
+            res.json({message: "Song not found"});
+          else if(results.permissions === false) //sendReply(req.body.From, 'No Explicit Songs in this Room ', client)
+            res.json({message: "No Explicit Songs in this Room"});
+          else //sendReply(req.body.From, 'There was a problem with the request', client)
+            res.json({message: "There was a problem with the request'"});
         });
       }
       });
     }
   else{
     removeUserRoom(req.body, function(err, user){
-      if(err)  sendReply(req.body.From, 'Err unsubscribing', client)//res.json({message: "Error unsubscribing"});
-      if(!user) sendReply(req.body.From, 'You were not subscribed to a room', client)//res.json({message: "you were not subscribed to a room"});
-      if(user) sendReply(req.body.From, 'You have been unsubscribed from room: '+user.roomID, client)//res.json({message: "You have been unsubscribed from a room: "+ user.roomID})
+      if(err)  //sendReply(req.body.From, 'Err unsubscribing', client)
+        res.json({message: "Error unsubscribing"});
+      if(!user) //sendReply(req.body.From, 'You were not subscribed to a room', client)
+        res.json({message: "you were not subscribed to a room"});
+      if(user) //sendReply(req.body.From, 'You have been unsubscribed from room: '+user.roomID, client)
+        res.json({message: "You have been unsubscribed from a room: "+ user.roomID})
     });
   }
     });

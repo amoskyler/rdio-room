@@ -42,7 +42,15 @@ module.exports = function(router, ownerAPI){
           if (err)
             res.send(err);
           else{
-          owner.rdioURL = req.body.email; 	// update the owner's info
+            console.log(owner.roomID);
+            console.log(req.body.explicit)
+            User.update({roomID: owner.roomID}, {$set: {explicitPermission: req.body.explicit}}, {multi: true}, function(err, numberAffected){
+              if(err) console.log(err)
+              else console.log("success "+ numberAffected);
+            })
+
+          owner.rdioURL = req.body.email;
+          owner.explicit = req.body.explicit; 	// update the owner's info
 
           // save the bear
           owner.save(function(err) {

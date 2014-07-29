@@ -9,8 +9,9 @@ module.exports = function (userRequest, user, rdio, callback){
       var results = arguments[1].result.results[0]
       if(arguments[1].result.track_count != 0){
         //check if users have permission to request explicit tracks
-        if(results.isExplicit === user.explicitPermission){
-          results.permission = true;
+        if((results.isExplicit === true && user.explicitPermission === true) || (!results.isExplicit)){
+          results.permissions = true
+
           var request = new Request();
           request.songName = results.name;
           request.allData = results;
@@ -21,8 +22,9 @@ module.exports = function (userRequest, user, rdio, callback){
             if(err) return callback(err, false)
             else return callback(null, results)
           });
-        }
-      else {results.permission = false; return callback(null, results);}
+      }
+        else {results.permissions = false; return callback(null, results)}
+
       }
       else return callback(null, false);
     });
