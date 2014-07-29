@@ -21,10 +21,14 @@ module.exports = function (app, passport){
   });
 
   app.get('/auth/rdio/callback', passport.authenticate('rdio'), function(req, res){
+    req.user.active = true;
+    req.user.save();
     res.redirect('/')
   });
 
   app.get('/logout', function(req, res){
+    req.user.active = false;
+    req.user.save();
     req.logout();
     res.redirect('/');
   });

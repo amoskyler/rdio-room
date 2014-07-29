@@ -1,11 +1,13 @@
-Request = require('../models/requests');
-checkUser = require('../functions/currentUser');
-saveUser = require('../functions/saveUser');
-updateUser = require('../functions/userUpdate')
-addUserRoom = require('../functions/addUserRoom');
-addRequestRoom = require('../functions/addRequestRoom');
-removeUserRoom = require('../functions/removeUserRoom');
-sendReply = require('../functions/sendReply');
+var Request = require('../models/requests');
+var auth = require('../config/auth')
+var checkUser = require('../functions/currentUser');
+var saveUser = require('../functions/saveUser');
+var updateUser = require('../functions/userUpdate')
+var addUserRoom = require('../functions/addUserRoom');
+var addRequestRoom = require('../functions/addRequestRoom');
+var removeUserRoom = require('../functions/removeUserRoom');
+var addWebRequest = require('../functions/addWebRequest');
+var sendReply = require('../functions/sendReply');
 
 module.exports = function(router, io, client, rdio){
   router.route('/request/:request_id')
@@ -52,6 +54,17 @@ module.exports = function(router, io, client, rdio){
 //Create a request
     .post(function(req, res){
     //  console.log(req.body.Body.toUpperCase().replace(/ /g,''))
+    if(req.body.Origin && req.body.Origin === "SiteOrigin"){
+      addWebRequest(req, function(err, success){
+        if(err) res.json({message: err})
+        else if(success) res.json({message: "valid request from site has been added"});
+      })
+    }
+    else if(!req.body.AccountSid || req.body.AccountSid != auth.twilioAuth.accountSid){
+      console.log("Invalid Request");
+      res.json({message: "You have created an invalid request"})
+    }
+    else{
 
     console.log("New request from: "+req.body.From);
     req.body.Body = req.body.Body.toUpperCase();
@@ -125,5 +138,6 @@ module.exports = function(router, io, client, rdio){
         res.json({message: "You have been unsubscribed from a room: "+ user.roomID})
     });
   }
+}
     });
 };
