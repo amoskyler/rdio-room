@@ -27,7 +27,7 @@ define(function(require){
 
     render: function(){
       if(!this.model) return this;
-        console.log(this.model.attributes);
+        console.log(this.model.attributes[0].allData.key);
       console.log(this.model)
       this.$el.html(templ({
         requests: this.model.attributes

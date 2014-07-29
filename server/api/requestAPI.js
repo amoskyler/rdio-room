@@ -82,6 +82,7 @@ module.exports = function(router, io, client, rdio){
                 songName: results.name,
                 songId: results.key,
                 roomId: user.roomID,
+                songInfo: results
               });
               //sendReply(req.body.From, 'Your request for '+results.name+' by '+results.artist+' has been added to the queue', client)
               res.json({message: 'Your request for '+results.name+' by '+results.artist+' has been added to the queue'})

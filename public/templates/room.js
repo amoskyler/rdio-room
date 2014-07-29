@@ -14,7 +14,7 @@ buf.push("<div class=\"room\"><h1>Room</h1></div>");
     for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
       var request = $$obj[$index];
 
-buf.push("<p>" + (jade.escape((jade_interp = JSON.stringify(request)) == null ? '' : jade_interp)) + "<button class=\"removeRequest\">remove</button></p>");
+buf.push("<p>" + (jade.escape((jade_interp = JSON.stringify(request)) == null ? '' : jade_interp)) + "</p>");
     }
 
   } else {
@@ -22,7 +22,7 @@ buf.push("<p>" + (jade.escape((jade_interp = JSON.stringify(request)) == null ? 
     for (var $index in $$obj) {
       $$l++;      var request = $$obj[$index];
 
-buf.push("<p>" + (jade.escape((jade_interp = JSON.stringify(request)) == null ? '' : jade_interp)) + "<button class=\"removeRequest\">remove</button></p>");
+buf.push("<p>" + (jade.escape((jade_interp = JSON.stringify(request)) == null ? '' : jade_interp)) + "</p>");
     }
 
   }
