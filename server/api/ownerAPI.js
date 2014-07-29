@@ -42,22 +42,22 @@ module.exports = function(router, ownerAPI){
           if (err)
             res.send(err);
           else{
-            console.log(owner.roomID);
-            console.log(req.body.explicit)
+            if(req.body.explicit){
             User.update({roomID: owner.roomID}, {$set: {explicitPermission: req.body.explicit}}, {multi: true}, function(err, numberAffected){
               if(err) console.log(err)
-              else console.log("success "+ numberAffected);
+              else {owner.explicit = req.body.explicit; console.log("success "+ numberAffected);}
             })
-
+          }
+          else{};
           owner.rdioURL = req.body.email;
-          owner.explicit = req.body.explicit; 	// update the owner's info
+ 	        // update the owner's info
 
           // save the bear
           owner.save(function(err) {
             if (err)
               res.send(err);
             else
-              res.json({ message: "owner's email updated!" });
+              res.json({ message: "Owner Updated!" });
           });
         }
         });
