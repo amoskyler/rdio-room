@@ -1,6 +1,7 @@
 Request = require('../models/requests');
 checkUser = require('../functions/currentUser');
 saveUser = require('../functions/saveUser');
+updateUser = require('../functions/userUpdate')
 addUserRoom = require('../functions/addUserRoom');
 addRequestRoom = require('../functions/addRequestRoom');
 removeUserRoom = require('../functions/removeUserRoom');
@@ -57,6 +58,7 @@ module.exports = function(router, io, client, rdio){
 
     if(req.body.Body.replace(/ /g, '') != "LEAVEROOM"){
       checkUser(req.body, function(err, user){
+        console.log(err);
         if(!user){
           addUserRoom(req.body, function(err, roomInfo){
             if(err) console.log(err)
@@ -72,12 +74,27 @@ module.exports = function(router, io, client, rdio){
             }
           })
         }
-
+      else if(user && user.active === false && user.block != true){
+        addUserRoom(req.body, function(err, roomInfo){
+          if(err) console.log(err)
+          else if(!roomInfo) //sendReply(req.body.From, "you're not currently subscribed to a room. Please enter a valid room code to continue", client)
+            res.json({message: "You are not currently subscribed to a room. Please enter a valid room code to continue"})
+          else{
+            updateUser(user, roomInfo, true, function(err, success){
+              if(err) res.json({message: err})
+              else res.json({message: "You've been added to a room: "+roomInfo.roomID})
+            });
+          }
+        })
+      }
+      else if(user.block){
+        res.json({message: "You are currently blocked from participating"})
+      }
       else{
         addRequestRoom(req.body, user, rdio, function(err, results){
           console.log(results);
           //check if song is flagged not to play
-            if(results.permissions != false){
+            if(results.permissions != false && results){
               io.to(user.roomID).emit('notify', {
                 songName: results.name,
                 songId: results.key,
@@ -101,9 +118,10 @@ module.exports = function(router, io, client, rdio){
     removeUserRoom(req.body, function(err, user){
       if(err)  //sendReply(req.body.From, 'Err unsubscribing', client)
         res.json({message: "Error unsubscribing"});
-      if(!user) //sendReply(req.body.From, 'You were not subscribed to a room', client)
+      else if(user.block) res.json({message: "You are currently blocked from participating"})
+      else if(!user) //sendReply(req.body.From, 'You were not subscribed to a room', client)
         res.json({message: "you were not subscribed to a room"});
-      if(user) //sendReply(req.body.From, 'You have been unsubscribed from room: '+user.roomID, client)
+      else if(user) //sendReply(req.body.From, 'You have been unsubscribed from room: '+user.roomID, client)
         res.json({message: "You have been unsubscribed from a room: "+ user.roomID})
     });
   }

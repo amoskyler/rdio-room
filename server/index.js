@@ -87,7 +87,7 @@ server.listen(port);
 
 function isAuthenticated(req, res, next){
   if (req.isAuthenticated()){
-    console.log("Authorized API Request from "+req.user.name);
+    console.log("Authorized level "+req.user.authLevel+" API Request from "+req.user.name);
     return next();
   }
   else{

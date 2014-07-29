@@ -7,11 +7,19 @@ var userSchema = mongoose.Schema({
         },
         active: {
           type: Boolean,
-          default: false
+          default: true
         },
         roomID: {
           type: String,
           required: true,
+        },
+        numRequests:{
+          type: Number,
+          default: 0
+        },
+        block:{
+          type: Boolean,
+          default: false
         },
         explicitPermission: {
           type: Boolean,

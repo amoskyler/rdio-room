@@ -48,7 +48,6 @@ module.exports = function(router, ownerAPI){
               else {owner.explicit = req.body.explicit; console.log("success "+ numberAffected);}
             })
           }
-          else{};
           owner.rdioURL = req.body.email;
  	        // update the owner's info
 

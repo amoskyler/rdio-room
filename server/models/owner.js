@@ -25,11 +25,18 @@ var ownerSchema = mongoose.Schema({
         name: {
           type: String
         },
+        authLevel: {
+          type: Number,
+          default: 1
+        },
         roomID: {
           type: String,
           required: true,
           default: makeid()
-
+        },
+        active: {
+          type: Boolean,
+          default: true
         },
         explicit: {
           type: Boolean,
